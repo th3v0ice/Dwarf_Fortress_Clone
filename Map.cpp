@@ -162,26 +162,23 @@ int Map::draw_map(std::vector<std::vector<char>> &buffer)
 	int height = buffer.size();
 	int width = buffer[0].size();
 
-	int bsize = width * height + height;
-	char* buf = new char[bsize];
-	char* const last = buf + bsize;
-	char* start = buf;
+	int bsize = (width + 0) * height;
+	char buf[bsize];
+	int start = 0;
 
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
-			start += snprintf(start, last-start, "%c", buffer[i][j]);
+			char c = buffer[i][j];
+			if(c == 'X')
+				bsize++;
+			start += sprintf(buf + start, "%c", c);
 		}
-
-		if (i < (height - 1))
-			start += snprintf(start, last-start, "\n");
+		//start += sprintf(buf + start, "\n");
 	}
 
-	*start = '\0';
-
+	//start += sprintf(buf + start, "\n");
 	printf("%s", buf);
-
-	delete buf;
-
+	fflush(stdout);
 	return 0;
 }
 
