@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.15.0 FATAL_ERROR)
 
 set(CMAKE_SYSTEM_VERSION 10.0 CACHE STRING "" FORCE)
+#set(CMAKE_VERBOSE_MAKEFILE on)
 
 project(Dwarf_Fortress_Clone CXX)
 
@@ -90,13 +91,10 @@ add_executable(${PROJECT_NAME} ${ALL_FILES})
 
 set(ROOT_NAMESPACE DwarfFortressClone)
 
-
-
-
-
 ################################################################################
 # Compile and link options
 ################################################################################
 
-target_compile_options(${PROJECT_NAME} PRIVATE -std=c++17 -O0 -lboost -g)
+target_compile_options(${PROJECT_NAME} PRIVATE -std=c++17 -O0 -g)
+target_link_libraries(${PROJECT_NAME} PRIVATE -lncurses)
 

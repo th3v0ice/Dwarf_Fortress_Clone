@@ -157,7 +157,7 @@ int Map::test_load_good_file()
 	return 0;
 }
 
-int Map::test_draw_map(std::vector<std::vector<char>> &buffer)
+int Map::draw_map(std::vector<std::vector<char>> &buffer)
 {
 	int height = buffer.size();
 	int width = buffer[0].size();
@@ -192,25 +192,25 @@ int Map::test_get_map()
 
 
 	getMapAroundPlayer(92, 15, 185, 30, buffer);
-	test_draw_map(buffer);
+	draw_map(buffer);
 
 	std::this_thread::sleep_for(tm);
 
 	//Move right
 	getMapAroundPlayer(93, 15, 185, 30, buffer);
-	test_draw_map(buffer);
+	draw_map(buffer);
 
 	std::this_thread::sleep_for(tm);
 
 	//Move right
 	getMapAroundPlayer(94, 15, 185, 30, buffer);
-	test_draw_map(buffer);
+	draw_map(buffer);
 
 	std::this_thread::sleep_for(tm);
 
 	//Move up
 	getMapAroundPlayer(94, 14, 185, 30, buffer);
-	test_draw_map(buffer);
+	draw_map(buffer);
 
 	std::this_thread::sleep_for(tm);
 	std::this_thread::sleep_for(tm);

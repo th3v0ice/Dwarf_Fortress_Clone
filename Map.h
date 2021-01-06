@@ -84,6 +84,8 @@ public:
 	int getMapAroundPlayer(int x, int y, int bufw, int bufh, std::vector<std::vector<char>>& buffer);
 
 	int self_check();
+	int draw_map(std::vector<std::vector<char>>& buffer);
+
 private:
 	//UNIT TESTS BELOW
 
@@ -94,7 +96,6 @@ private:
 	
 	int test_load_good_file();
 
-	int test_draw_map(std::vector<std::vector<char>>& buffer);
 	int test_get_map();
 
 };
