@@ -11,20 +11,23 @@ enum class item_type {
 class Item
 {
 private:
-	std::string name;
 	
+protected:
 	item_type type;
+	std::string name;
 
 
 public:
 	Item() {};
 	virtual ~Item();
 
-	item_type get_type() {
+	item_type getType() {
 		return type;
 	}
 
-	void set_type(item_type itype) {
+	virtual std::string toString() = 0;
+
+	void setType(item_type itype) {
 		type = itype;
 	}
 };

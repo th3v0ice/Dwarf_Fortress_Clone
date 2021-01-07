@@ -31,13 +31,13 @@ public:
 	* return 1, which means that the entity is dead. Otherwise
 	* it will return 0;
 	*/
-	int reduce_health(int amount);
+	int reduceHealth(int amount);
 
-	std::string& get_name() {
+	std::string& getName() {
 		return name;
 	}
 
-	int get_health() {
+	int getHealth() {
 		return health;
 	}
 
@@ -45,7 +45,15 @@ public:
 	* Equip will calculate entities armor and attack values based on the
 	* equiped item.
 	*/
-	int equip_or_consume(Item& i);
+	int equipOrConsume(Item* i);
+
+	void testFillInventory(){
+		inventory.fillWithDummyData();
+	}
+
+	void drawInventory(std::vector<std::vector<char>> &buffer){
+		inventory.drawInventory(buffer);
+	}
 
 };
 

@@ -6,9 +6,18 @@ private:
 	int damage;
 
 public:
-	Weapon(int dmg) : damage(dmg) {}
+	Weapon(std::string _name, int dmg) : damage(dmg) {
+		type = item_type::ITEM_TYPE_WEAPON ;
+		name = _name;
+	}
+	
 	~Weapon() {}
 
 	int get_damage() { return damage; }
+
+	std::string toString(){
+		std::string res = "[W] " + name + " (+" + std::to_string(damage) + " Att)";
+		return res;
+	}
 };
 
