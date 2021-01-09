@@ -11,12 +11,18 @@
 
 #include "Player.h"
 
-
+enum class game_code
+{
+    KEY_NONE = -1,
+    KEY_INVENTORY = 0,
+    KEY_MENU = 1,
+    KEY_DROP = 2
+};
 
 #define CLEAR printf("\033[H\033[J")
 #define GOTOXY(x,y) printf("\033[%d;%dH", (y), (x))
 
-int inputHandler(int &x_cord, int &y_cord, int limit_x, int limit_y, int& code)
+int inputHandler(int &x_cord, int &y_cord, int limit_x, int limit_y, game_code& code)
 {
     int ch = 0;
 
@@ -54,11 +60,14 @@ int inputHandler(int &x_cord, int &y_cord, int limit_x, int limit_y, int& code)
             break;
         case 109:
         case 77: //Menu
-            code = 44;
+            code = game_code::KEY_MENU;
             break;
         case 105:
         case 73: //Inventory
-            code = 55;
+            code = game_code::KEY_INVENTORY;
+            break;
+        case 120: //Drop
+            code = game_code::KEY_DROP;
             break;
         default:
         {
@@ -105,8 +114,13 @@ int main()
         prev_x = x_cord,
         prev_y = y_cord,
         center_x = x_cord,
-        center_y = y_cord,
+        center_y = y_cord;
+    
+    game_code
         code;
+
+    bool   
+        inv_open = false;
 
     Player player;
     player.testFillInventory();
@@ -126,14 +140,51 @@ int main()
     while(1)
     {
         inputHandler(x_cord, y_cord, w.ws_col-1, w.ws_row-1, code);
-        shrdMap->getMapAroundPlayer(x_cord, y_cord, w.ws_col, w.ws_row, buffer);
 
-        if(code == 55)
+        if(code == game_code::KEY_INVENTORY && !inv_open)
         {
+            shrdMap->getMapAroundPlayer(x_cord, y_cord, w.ws_col, w.ws_row, buffer);
+
             player.drawInventory(buffer);
             shrdMap->draw_map(buffer);
-            code = 0;
+            code = game_code::KEY_NONE;
+            inv_open = true;
         }
+
+        if(code == game_code::KEY_INVENTORY && inv_open)
+        {
+            //Closing the inventory
+            inv_open = false;
+            code = game_code::KEY_NONE;
+
+            shrdMap->getMapAroundPlayer(x_cord, y_cord, w.ws_col, w.ws_row, buffer);
+            buffer[center_y][center_x] = 'P';
+            shrdMap->draw_map(buffer);
+
+        }
+
+        if(inv_open)
+        {
+            //Handle inventory selection change
+            if(y_cord > prev_y)
+                player.changeInventorySelection(buffer, 1);
+            else if(y_cord < prev_y)
+                player.changeInventorySelection(buffer, -1);
+            
+            if(code == game_code::KEY_DROP)
+            {
+                player.dropFromInventory();
+                player.drawInventory(buffer);
+                code = game_code::KEY_NONE;
+            }
+
+            shrdMap->draw_map(buffer);
+
+            //Forbid moving while inventory is open
+            x_cord = prev_x;
+            y_cord = prev_y;
+        }
+
 
         if(prev_x != x_cord || prev_y != y_cord)
         {

@@ -17,7 +17,7 @@ void Inventory::drawInventory(std::vector<std::vector<char>> &buffer)
     //Clear the buffer in that region
     for (int i = h_start; i < h_start + inv_height; i++) {
         buffer[i][w_start] = '|';
-        buffer[i][w_start + inv_width] = '|';
+        buffer[i][w_start + inv_width-1] = '|';
 		for (int j = w_start + 1; j < w_start + inv_width - 1; j++) {
             buffer[i][j] = ' ';
 		}
@@ -36,9 +36,14 @@ void Inventory::drawInventory(std::vector<std::vector<char>> &buffer)
 
     h_start += spacing;
     
+    selected_item_idx = 0;
+    selected_item_idx_y = h_start;
+    selected_item_idx_x = w_start + spacing;
+
     //Inventory is limited to 3 items
 	for (int i = h_start, inv_cnt = 0; i < h_start + inv_height - spacing, inv_cnt < inventory.size(); i++, inv_cnt++) {
-        std::string desc = inventory[inv_cnt]->toString();
+        std::string desc = (inv_cnt == 0) ? "*" : " ";
+        desc += inventory[inv_cnt]->toString();
 
         int start_offset = w_start + spacing;
 		for (int j = start_offset, k = 0; j < w_start + inv_width - spacing && k < desc.length(); j++, k++) {
@@ -65,5 +70,33 @@ void Inventory::drawInventory(std::vector<std::vector<char>> &buffer)
 
 	return;
 }
-void dropFromInventory();
-void addToInventory(Item* item);
+
+
+void Inventory::dropFromInventory()
+{
+    if(inventory.size() > 0 && inventory.size() > selected_item_idx)
+        inventory.erase(inventory.begin() + selected_item_idx);
+}
+
+
+
+void Inventory::changeInventorySelection(int p, std::vector<std::vector<char>> &buffer)
+{
+    buffer[selected_item_idx_y][selected_item_idx_x] = ' ';
+
+    if(inventory.empty())
+        return;
+
+    if(p > 0 && selected_item_idx < inventory.size()-1){
+        selected_item_idx++;
+        selected_item_idx_y++;
+    }
+    else if(p < 0 && selected_item_idx > 0){
+        selected_item_idx--;
+        selected_item_idx_y--;
+    }
+
+    buffer[selected_item_idx_y][selected_item_idx_x] = '*';
+
+    return;
+}

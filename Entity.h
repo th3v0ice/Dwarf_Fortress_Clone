@@ -11,7 +11,6 @@ class Entity
 {
 private:
 	std::string name;
-	Inventory inventory;
 
 	Armor *armor;
 	Weapon *weapon;
@@ -20,6 +19,10 @@ private:
 		health,
 		attack,
 		defense;
+
+protected:
+	Inventory inventory;
+
 
 public:
 	Entity();
@@ -51,9 +54,7 @@ public:
 		inventory.fillWithDummyData();
 	}
 
-	void drawInventory(std::vector<std::vector<char>> &buffer){
-		inventory.drawInventory(buffer);
-	}
+	virtual void dropFromInventory() = 0;
 
 };
 

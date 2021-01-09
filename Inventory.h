@@ -16,6 +16,8 @@ public:
     void dropFromInventory();
     void addToInventory(Item *item);
 
+    void changeInventorySelection(int p, std::vector<std::vector<char>> &buffer);
+
 
     void fillWithDummyData(){
         std::shared_ptr<Weapon> w(new Weapon("Mighty sword", 100));
@@ -32,5 +34,13 @@ public:
     }
 private:
     std::vector<std::shared_ptr<Item>> inventory;
+
+    int selected_item_idx;
+
+    //Coordinates for a star which designates selected item.
+    //It will be much faster to change the selection instead 
+    //of drawing everything again.
+    int selected_item_idx_x;
+    int selected_item_idx_y;
 };
 
