@@ -1,4 +1,5 @@
 #pragma once
+#include <sstream>
 #include "Entity.h"
 class Player : public Entity
 {
@@ -24,5 +25,6 @@ public:
     }
 
     void useSelectedItemFromInventory();
+    void drawCharacterStats(std::vector<std::vector<char>> &buffer);
 };
 
