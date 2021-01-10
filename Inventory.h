@@ -18,6 +18,7 @@ public:
 
     void changeInventorySelection(int p, std::vector<std::vector<char>> &buffer);
 
+    std::shared_ptr<Item> getSelectedItem();
 
     void fillWithDummyData(){
         std::shared_ptr<Weapon> w(new Weapon("Mighty sword", 100));

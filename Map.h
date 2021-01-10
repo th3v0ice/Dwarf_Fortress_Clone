@@ -24,6 +24,8 @@ enum {
 */
 #define FULL_BORDER 400
 #define BORDER (FULL_BORDER/2)
+#define CLEAR printf("\033[H\033[J")
+#define GOTOXY(x,y) printf("\033[%d;%dH", (y), (x))
 
 class Map
 {

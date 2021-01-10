@@ -9,20 +9,19 @@
 
 class Entity
 {
-private:
+protected:
 	std::string name;
 
-	Armor *armor;
-	Weapon *weapon;
+	std::shared_ptr<Armor> armor;
+	std::shared_ptr<Weapon> weapon;
 
 	int 
 		health,
 		attack,
 		defense;
 
-protected:
-	Inventory inventory;
 
+	Inventory inventory;
 
 public:
 	Entity();
@@ -48,7 +47,7 @@ public:
 	* Equip will calculate entities armor and attack values based on the
 	* equiped item.
 	*/
-	int equipOrConsume(Item* i);
+	int equipOrConsume(std::shared_ptr<Item> i);
 
 	void testFillInventory(){
 		inventory.fillWithDummyData();

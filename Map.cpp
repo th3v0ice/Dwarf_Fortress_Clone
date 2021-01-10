@@ -177,6 +177,9 @@ int Map::draw_map(std::vector<std::vector<char>> &buffer)
 	}
 
 	//start += sprintf(buf + start, "\n");
+	
+    CLEAR;
+    GOTOXY(0, 0);
 	printf("%s", buf);
 	fflush(stdout);
 	return 0;

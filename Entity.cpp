@@ -19,12 +19,12 @@ int Entity::reduceHealth(int amount)
     return 0;
 }
 
-int Entity::equipOrConsume(Item* i)
+int Entity::equipOrConsume(std::shared_ptr<Item> i)
 {
     switch (i->getType()) {
     case item_type::ITEM_TYPE_ARMOR:
     {
-        Armor* a_armor = dynamic_cast<Armor*>(i);
+        std::shared_ptr<Armor> a_armor = std::dynamic_pointer_cast<Armor>(i);
 
         //We first unequip the previous armor if one existed
         if (armor)
@@ -37,7 +37,7 @@ int Entity::equipOrConsume(Item* i)
     }
     case item_type::ITEM_TYPE_POTION:
     {
-        Consumable* c_cons = dynamic_cast<Consumable*>(i);
+        std::shared_ptr<Consumable> c_cons = std::dynamic_pointer_cast<Consumable>(i);
         health += c_cons->get_amount();
         if (health > 100)
             health = 100;
@@ -45,7 +45,7 @@ int Entity::equipOrConsume(Item* i)
     }
     case item_type::ITEM_TYPE_WEAPON:
     {
-        Weapon* w_weapon = dynamic_cast<Weapon*>(i);
+        std::shared_ptr<Weapon> w_weapon = std::dynamic_pointer_cast<Weapon>(i);
 
         //Unequip a weapon first
         if (weapon)

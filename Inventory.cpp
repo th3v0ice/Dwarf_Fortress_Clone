@@ -57,13 +57,18 @@ void Inventory::drawInventory(std::vector<std::vector<char>> &buffer)
         h_start = h_start + inv_height - 2;
 
     
-    //Last line ╚═══════╝
+    //Last line ╚══Drop(x)══Use(u)═══╝
+    std::string usedu = "Drop(x)---Use(u)";
+    int cnt = 0;
     for (int j = w_start; j < w_start + inv_width; j++) {
         if(j == w_start)
             buffer[h_start][j] = '+';
         else if(j == w_start + inv_width - 1)
             buffer[h_start][j] = '+';
-        else 
+        else if(j > w_start + spacing && cnt < usedu.length()) {
+            buffer[h_start][j] = usedu[cnt];
+            cnt++;
+        } else 
             buffer[h_start][j] = '-';
     }
     
@@ -71,14 +76,11 @@ void Inventory::drawInventory(std::vector<std::vector<char>> &buffer)
 	return;
 }
 
-
 void Inventory::dropFromInventory()
 {
     if(inventory.size() > 0 && inventory.size() > selected_item_idx)
         inventory.erase(inventory.begin() + selected_item_idx);
 }
-
-
 
 void Inventory::changeInventorySelection(int p, std::vector<std::vector<char>> &buffer)
 {
@@ -99,4 +101,12 @@ void Inventory::changeInventorySelection(int p, std::vector<std::vector<char>> &
     buffer[selected_item_idx_y][selected_item_idx_x] = '*';
 
     return;
+}
+
+std::shared_ptr<Item> Inventory::getSelectedItem()
+{
+    if(inventory.size() > 0)
+        return inventory[selected_item_idx];
+
+    return std::shared_ptr<Item>(nullptr);
 }
