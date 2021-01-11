@@ -26,11 +26,27 @@ int View::checkFieldAndPerfAction(){
 
             std::shared_ptr<Consumable> cons(new Consumable(hpn, hp));
             
-            shrdPlayer->addToInventory(std::static_pointer_cast<Item>(cons));
+            if( shrdPlayer->addToInventory(std::static_pointer_cast<Item>(cons)) >= 0)
+                shrdMap->updateMap(x_cord, y_cord, '_'); //If Item was consumed we need to update the main map here.
 
-            //If Item was consumed we need to update the main map here.
-            shrdMap->updateMap(x_cord, y_cord, '_');
+            break;
+        }
+        case ARMOR: {
+            int def = rand() % 200;
+            int idx = rand() % (armor_names.size() - 1);
+            std::shared_ptr<Armor> armor(new Armor(armor_names[idx], def));
+            if( shrdPlayer->addToInventory(std::static_pointer_cast<Item>(armor)) >= 0)
+                shrdMap->updateMap(x_cord, y_cord, '_'); //If Item was consumed we need to update the main map here.
 
+            break;
+        }
+        case WEAPON: {
+            int att = rand() % 120;
+            int idx = rand() % (weapon_names.size() - 1);
+            std::shared_ptr<Weapon> weapon(new Weapon(weapon_names[idx], att));
+            if( shrdPlayer->addToInventory(std::static_pointer_cast<Item>(weapon)) >= 0)
+                shrdMap->updateMap(x_cord, y_cord, '_'); //If Item was consumed we need to update the main map here.         
+            break;
         }
     }
     return 0;

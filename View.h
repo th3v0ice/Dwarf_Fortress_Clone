@@ -48,6 +48,10 @@ private:
     std::shared_ptr<Player> shrdPlayer;
     std::shared_ptr<Map> shrdMap;
 
+
+    std::vector<std::string> armor_names;
+    std::vector<std::string> weapon_names;
+
 public:
     View(int w, int h, 
         std::shared_ptr<Map> m, 
@@ -64,6 +68,33 @@ public:
 
         inv_open = false;
         stats_open = false;
+
+        armor_names.push_back("Edge of Patience");
+        armor_names.push_back("Defense of Twilight");
+        armor_names.push_back("Armor of Absorption");
+        armor_names.push_back("Armor of Dominance");
+        armor_names.push_back("Adamantite Cuirass");
+        armor_names.push_back("Golden Armor");
+        armor_names.push_back("Armor of Illusions");
+        armor_names.push_back("Chestplate of Soul");
+        armor_names.push_back("Mail Chestplate");
+        armor_names.push_back("Vengeful Adamantite");
+        armor_names.push_back("Tunic of Fury");
+        armor_names.push_back("Protector of Souls");
+        armor_names.push_back("Chestguard of Time");
+
+        weapon_names.push_back("Tyrhung");
+        weapon_names.push_back("Tranquility");
+        weapon_names.push_back("King's Legacy");
+        weapon_names.push_back("Firestorm Sword");
+        weapon_names.push_back("Corrupted Blade");
+        weapon_names.push_back("Cataclysm");
+        weapon_names.push_back("Worldslayer");
+        weapon_names.push_back("Espada");
+        weapon_names.push_back("Windsong Protector");
+        weapon_names.push_back("Spectral Sword");
+        weapon_names.push_back("Armageddon");
+        weapon_names.push_back("Severance");
     }
     ~View(){}
 
