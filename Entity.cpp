@@ -8,6 +8,7 @@ Entity::Entity()
     weapon = nullptr;
     attack = 10;
     defense = 0;
+    inventory.setLimit(2);
 }
 
 int Entity::reduceHealth(int amount)

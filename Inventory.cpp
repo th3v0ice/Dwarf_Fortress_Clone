@@ -110,3 +110,13 @@ std::shared_ptr<Item> Inventory::getSelectedItem()
 
     return std::shared_ptr<Item>(nullptr);
 }
+
+int Inventory::addToInventory(std::shared_ptr<Item> item) {
+
+    if(inventory.size() >= limit)
+        return -1;
+
+    inventory.push_back(item);
+    
+    return 0;
+}

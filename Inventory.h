@@ -11,19 +11,22 @@ class Inventory
 
 public:
     Inventory(){ inventory.reserve(3); }
+    Inventory(int l): limit(l) {
+        inventory.reserve(limit);
+    }
 
     void drawInventory(std::vector<std::vector<char>> &buffer);
     void dropFromInventory();
-    void addToInventory(Item *item);
+    int addToInventory(std::shared_ptr<Item> item);
 
     void changeInventorySelection(int p, std::vector<std::vector<char>> &buffer);
-
+    void setLimit(int lim) { limit = lim; }
     std::shared_ptr<Item> getSelectedItem();
 
     void fillWithDummyData(){
         std::shared_ptr<Weapon> w(new Weapon("Mighty sword", 100));
         std::shared_ptr<Armor> a(new Armor("Shiny armor", 20));
-        std::shared_ptr<Consumable> c(new Consumable("Great potion", 10));
+        std::shared_ptr<Consumable> c(new Consumable("Small potion", 10));
 
         std::shared_ptr<Item> w_i = w;
         std::shared_ptr<Item> a_i = a;
@@ -37,7 +40,7 @@ private:
     std::vector<std::shared_ptr<Item>> inventory;
 
     int selected_item_idx;
-
+    int limit;
     //Coordinates for a star which designates selected item.
     //It will be much faster to change the selection instead 
     //of drawing everything again.

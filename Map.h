@@ -85,6 +85,16 @@ public:
 	*/
 	int getMapAroundPlayer(int x, int y, int bufw, int bufh, std::vector<std::vector<char>>& buffer);
 
+	/**
+	 * Updates the map at the designated coordinates. 
+	 * 
+	 * x      ->    is the players X coordinate on the map, not on the screen
+	 * y      ->    is the players Y coordinate on the map, not on the screen
+	 * c      ->    character to place at coordinates
+	*/
+	int updateMap(int x, int y, char c);
+
+	//Testing code
 	int self_check();
 	int draw_map(std::vector<std::vector<char>>& buffer);
 

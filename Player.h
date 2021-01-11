@@ -9,6 +9,8 @@ public:
         health = 100;
         defense = 10;
         attack = 20;
+
+        inventory.setLimit(5);
     }
 
 	void drawInventory(std::vector<std::vector<char>> &buffer){
@@ -26,5 +28,7 @@ public:
 
     void useSelectedItemFromInventory();
     void drawCharacterStats(std::vector<std::vector<char>> &buffer);
+
+    int addToInventory(std::shared_ptr<Item> item);
 };
 

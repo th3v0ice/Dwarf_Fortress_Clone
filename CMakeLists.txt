@@ -37,6 +37,7 @@ set(Header_Files
     "Inventory.h"
     "Item.h"
     "Map.h"
+    "View.h"
 )
 source_group("Header Files" FILES ${Header_Files})
 
@@ -59,6 +60,7 @@ set(Source_Files
     "Inventory.cpp"
     "Item.cpp"
     "Map.cpp"
+    "View.cpp"
 )
 source_group("Source Files" FILES ${Source_Files})
 

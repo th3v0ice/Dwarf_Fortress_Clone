@@ -85,6 +85,19 @@ int Map::getMapAroundPlayer(int x, int y, int bufw, int bufh, std::vector<std::v
 	return 0;
 }
 
+int Map::updateMap(int x, int y, char c) {
+
+	//The current position of the player on the map is (x, y)
+	int
+		offset_x = x + BORDER,
+		offset_y = y + BORDER;
+
+	int map_index = offset_y * (width + FULL_BORDER) + offset_x;
+	map[map_index] = c;
+
+	return 0;
+}
+
 int Map::self_check()
 {
 	test_load_bad_file1();
@@ -177,7 +190,7 @@ int Map::draw_map(std::vector<std::vector<char>> &buffer)
 	}
 
 	//start += sprintf(buf + start, "\n");
-	
+
     CLEAR;
     GOTOXY(0, 0);
 	printf("%s", buf);

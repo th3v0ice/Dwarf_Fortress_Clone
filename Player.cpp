@@ -102,3 +102,7 @@ void Player::drawCharacterStats(std::vector<std::vector<char>> &buffer) {
 
     return;
 }
+
+int Player::addToInventory(std::shared_ptr<Item> item) {
+    return inventory.addToInventory(item);
+}

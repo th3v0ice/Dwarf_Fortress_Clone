@@ -9,23 +9,8 @@
 #include <stdio.h>
 #include <unistd.h>
 
+#include "View.h"
 #include "Player.h"
-
-enum class gcode
-{
-    DF_KEY_NONE = -1,
-    DF_KEY_INVENTORY = 0,
-    DF_KEY_MENU = 1,
-    DF_KEY_DROP = 2,
-    DF_KEY_LEFT = 3,
-    DF_KEY_RIGHT = 4,
-    DF_KEY_UP = 5,
-    DF_KEY_DOWN = 6,
-    DF_KEY_USE = 7,
-    DF_KEY_STATS = 8
-};
-
-
 
 gcode inputHandler()
 {
@@ -84,46 +69,31 @@ gcode inputHandler()
     return gcode::DF_KEY_NONE;
 }
 
+
 int main()
 {
+    struct winsize w;
+    gcode code;
+    std::shared_ptr<Map> shrdMap;
+    std::shared_ptr<Player> player;
+    std::shared_ptr<View> view;
+
     initscr();
     cbreak();
     noecho();
     clear();
     keypad(stdscr, true);
     nodelay(stdscr, TRUE);
-
-    //Lets get terminal window size
-    struct winsize w;
-    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w); 
-
-    std::vector<std::vector<char>> buffer;
-    buffer.reserve(w.ws_row);
-    for(int i = 0; i < w.ws_row; i++)
-        buffer[i].reserve(w.ws_col);
+    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);     //Lets get terminal window size
 
 
-    int 
-        x_cord = w.ws_col / 2,
-        y_cord = w.ws_row / 2,
-        prev_x = x_cord,
-        prev_y = y_cord,
-        center_x = x_cord,
-        center_y = y_cord,
-        limit_x = w.ws_col - 1,
-        limit_y = w.ws_row - 1;
-    
-    gcode
-        code;
 
-    bool   
-        inv_open = false,
-        stats_open = false;
 
-    Player player;
-    player.testFillInventory();
 
-    std::shared_ptr<Map> shrdMap = std::make_shared<Map>();
+    player = std::shared_ptr<Player>(new Player(), [](Player* plyr){ if(plyr) delete plyr;});
+    player->testFillInventory();
+
+    shrdMap = std::make_shared<Map>();
 
 	int ret = shrdMap->loadMap("tests/mape.json");
     if(ret < 0)
@@ -132,124 +102,12 @@ int main()
         return -1;
     }
 
-    shrdMap->getMapAroundPlayer(x_cord, y_cord, w.ws_col, w.ws_row, buffer);
-
+    view = std::shared_ptr<View>(new View(w.ws_col, w.ws_row, shrdMap, player));
+    view->init();
 
     while(1)
     {
         code = inputHandler();
-
-        switch(code)
-        {
-            case gcode::DF_KEY_INVENTORY: {
-                if(!inv_open) {
-                    inv_open = true;
-                    stats_open = false;
-                    shrdMap->getMapAroundPlayer(x_cord, y_cord, w.ws_col, w.ws_row, buffer);
-                    player.drawInventory(buffer);
-                } else {
-                    //Closing the inventory
-                    inv_open = false;
-                    shrdMap->getMapAroundPlayer(x_cord, y_cord, w.ws_col, w.ws_row, buffer);
-                    buffer[center_y][center_x] = 'P';
-                }
-                break;
-            }
-            case gcode::DF_KEY_DROP: {
-                if(inv_open){
-                    player.dropFromInventory();
-                    player.drawInventory(buffer);
-                }
-                break;
-            }
-            case gcode::DF_KEY_USE: {
-                if(inv_open) {
-                    player.useSelectedItemFromInventory();
-                    player.drawInventory(buffer);
-                }
-                break;
-            }
-            case gcode::DF_KEY_STATS: {
-                if(!stats_open) {
-                    stats_open = true;
-                    inv_open = false;
-                    shrdMap->getMapAroundPlayer(x_cord, y_cord, w.ws_col, w.ws_row, buffer);
-                    player.drawCharacterStats(buffer);
-                } else {
-                    stats_open = false;
-                    shrdMap->getMapAroundPlayer(x_cord, y_cord, w.ws_col, w.ws_row, buffer);
-                    buffer[center_y][center_x] = 'P';
-                }
-                break;
-            }
-            case gcode::DF_KEY_UP: {
-                if(inv_open && !stats_open){
-                    player.changeInventorySelection(buffer, -1);
-                    y_cord = prev_y;        //Forbid moving while inventory is open
-                } else if (stats_open) {
-                    y_cord = prev_y;
-                } else {
-                    y_cord--;
-                    if (y_cord < 0)
-                        y_cord = 0;
-
-                    shrdMap->getMapAroundPlayer(x_cord, y_cord, w.ws_col, w.ws_row, buffer);
-                    buffer[center_y][center_x] = 'P';
-                    prev_y = y_cord;
-                }
-                break;
-            }
-            case gcode::DF_KEY_DOWN: {
-                if(inv_open && !stats_open){
-                    player.changeInventorySelection(buffer, 1);
-                    y_cord = prev_y;        //Forbid moving while inventory is open
-                } else if(stats_open) {
-                    y_cord = prev_y;
-                } else {
-                    y_cord++;
-                    if(y_cord > limit_y)
-                        y_cord = limit_y;
-
-                    shrdMap->getMapAroundPlayer(x_cord, y_cord, w.ws_col, w.ws_row, buffer);
-                    buffer[center_y][center_x] = 'P';
-                    prev_y = y_cord;
-                }
-                break;                
-            }
-            case gcode::DF_KEY_LEFT: {
-                if(inv_open || stats_open){
-                    x_cord = prev_x;
-                } else {
-                    x_cord--;
-                    if(x_cord < 0)
-                        x_cord = 0;
-                
-                    shrdMap->getMapAroundPlayer(x_cord, y_cord, w.ws_col, w.ws_row, buffer);
-                    buffer[center_y][center_x] = 'P';
-                    prev_x = x_cord;
-                }
-                break;
-            }
-            case gcode::DF_KEY_RIGHT: {
-                if(inv_open || stats_open){
-                    x_cord = prev_x;
-                } else {
-                    x_cord++;
-                    if(x_cord > limit_x)
-                        x_cord = limit_x;
-
-                    shrdMap->getMapAroundPlayer(x_cord, y_cord, w.ws_col, w.ws_row, buffer);
-                    buffer[center_y][center_x] = 'P';
-                    prev_x = x_cord;
-                }
-                break;                
-            }
-        }
-
-        shrdMap->draw_map(buffer); //Its not neccessary to redraw everytime
-        code = gcode::DF_KEY_NONE;
-
-        std::this_thread::sleep_for(std::chrono::milliseconds(30));
+        view->gameLogic(code);
     }
-    //shrdMap->self_check();
 }
