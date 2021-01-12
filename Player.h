@@ -30,5 +30,6 @@ public:
     void drawCharacterStats(std::vector<std::vector<char>> &buffer);
 
     int addToInventory(std::shared_ptr<Item> item);
+
 };
 

@@ -30,10 +30,10 @@ public:
 	/**
 	* Reduces the health of the entity by the given amount.
 	* If the health goes to zero or below zero, method will
-	* return 1, which means that the entity is dead. Otherwise
-	* it will return 0;
+	* return false, which means that the entity is dead. Otherwise
+	* it will return true;
 	*/
-	int reduceHealth(int amount);
+	bool reduceHealth(int amount);
 
 	std::string& getName() {
 		return name;
@@ -54,6 +54,10 @@ public:
 	}
 
 	virtual void dropFromInventory() = 0;
+
+	int getAttack() { return attack; }
+	int getDefense() { return defense; }
+
 
 };
 

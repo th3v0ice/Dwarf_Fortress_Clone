@@ -10,10 +10,8 @@ class Inventory
 {
 
 public:
-    Inventory(){ inventory.reserve(3); }
-    Inventory(int l): limit(l) {
-        inventory.reserve(limit);
-    }
+    Inventory()     : selected_item_idx(0), limit(3) { inventory.reserve(3);     }
+    Inventory(int l): selected_item_idx(0), limit(l) { inventory.reserve(limit); }
 
     void drawInventory(std::vector<std::vector<char>> &buffer);
     void dropFromInventory();
@@ -21,6 +19,7 @@ public:
 
     void changeInventorySelection(int p, std::vector<std::vector<char>> &buffer);
     void setLimit(int lim) { limit = lim; }
+    int getLimit() { return limit; }
     std::shared_ptr<Item> getSelectedItem();
 
     void fillWithDummyData(){
@@ -36,6 +35,10 @@ public:
         inventory.push_back(a_i);
         inventory.push_back(c_i);
     }
+
+    std::size_t size() { return inventory.size(); }
+    void clear() { inventory.clear(); }
+    item_type getItemTypeAtIndex(int i) { return inventory[i]->getType(); };
 private:
     std::vector<std::shared_ptr<Item>> inventory;
 

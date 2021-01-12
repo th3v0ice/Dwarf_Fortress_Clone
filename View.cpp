@@ -8,23 +8,74 @@ enum fields
     WEAPON = 'W'
 };
 
+
+void View::printMessage(int x, int y, std::string s) {
+    for(int i = 0; i < s.length() && i < buffer[y].size(); i++)
+        buffer[y][x+i] = s[i]; 
+    return;
+}
+
+int View::initiateFight(std::shared_ptr<Monster> m) {
+    //Fight takes turns. Firstly player attacks the monster
+    //then the monster fights back. This cycle is repeated
+    //until one of the contestans dies.
+
+    bool 
+        alive_p = true,
+        alive_m = true;
+
+    while (alive_p && alive_m) {
+        int dmg = shrdPlayer->getAttack() - m->getDefense();
+        if(dmg < 0) dmg = 1;
+        
+        alive_m = m->reduceHealth(dmg);
+
+        if(!alive_m)
+            break;
+
+        dmg = m->getAttack() - shrdPlayer->getDefense();
+        if(dmg < 0) dmg = 1;
+        
+        alive_p = shrdPlayer->reduceHealth(dmg);
+    }
+
+    return (alive_p) ? 0 : 1;
+}
+
 int View::checkFieldAndPerfAction(){
     char c = buffer[center_y][center_x];
-    unsigned seed = time(0);
-    srand(seed);
     switch(c)
     {
-        case MONSTER:
-            break;
-        case POTION: {
-            int hp = rand() % 100;
-            std::string hpn = "Lesser Health Potion";
-            if(hp > 80)
-                hpn = "Greater Health Potion";
-            else if(hp > 50)
-                hpn = "Great Health Potion";
+        case MONSTER: {
+            std::shared_ptr<Monster> monster = Monster::generateMonster();
+            if(initiateFight(monster)) {
+                //Player has died
+                printMessage(center_x, center_y, "You have DIED!");
+            } else {
+                shrdMap->updateMap(x_cord, y_cord, 'x');
+                //We need to drop the items that monster had
+                int x = x_cord,
+                    y = y_cord, 
+                    w, a, c;
 
-            std::shared_ptr<Consumable> cons(new Consumable(hpn, hp));
+                monster->itemsInInventory(w, a, c);
+                for(int i = 0; i < w; i++)
+                    shrdMap->updateMap(x - i, y, 'W');
+                
+                y++;
+                for(int i = 0; i < a; i++)
+                    shrdMap->updateMap(x - i, y, 'A');
+
+                y++;
+                for(int i = 0; i < c; i++)
+                    shrdMap->updateMap(x - i, y, 'C');                
+
+            }
+
+            break;
+        }
+        case POTION: {
+            std::shared_ptr<Consumable> cons = Consumable::generateConsumable();
             
             if( shrdPlayer->addToInventory(std::static_pointer_cast<Item>(cons)) >= 0)
                 shrdMap->updateMap(x_cord, y_cord, '_'); //If Item was consumed we need to update the main map here.
@@ -32,18 +83,16 @@ int View::checkFieldAndPerfAction(){
             break;
         }
         case ARMOR: {
-            int def = rand() % 200;
-            int idx = rand() % (armor_names.size() - 1);
-            std::shared_ptr<Armor> armor(new Armor(armor_names[idx], def));
+            std::shared_ptr<Armor> armor = Armor::generateArmor();
+
             if( shrdPlayer->addToInventory(std::static_pointer_cast<Item>(armor)) >= 0)
                 shrdMap->updateMap(x_cord, y_cord, '_'); //If Item was consumed we need to update the main map here.
 
             break;
         }
         case WEAPON: {
-            int att = rand() % 120;
-            int idx = rand() % (weapon_names.size() - 1);
-            std::shared_ptr<Weapon> weapon(new Weapon(weapon_names[idx], att));
+            std::shared_ptr<Weapon> weapon = Weapon::generateWeapon();
+
             if( shrdPlayer->addToInventory(std::static_pointer_cast<Item>(weapon)) >= 0)
                 shrdMap->updateMap(x_cord, y_cord, '_'); //If Item was consumed we need to update the main map here.         
             break;

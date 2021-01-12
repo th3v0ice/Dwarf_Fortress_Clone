@@ -1,5 +1,7 @@
 #pragma once
 #include "Item.h"
+#include <memory>
+
 class Consumable : public Item
 {
 private:
@@ -18,5 +20,7 @@ public:
 		std::string res = "[C] " + name + " (+" + std::to_string(amount) + " health)";
 		return res;
 	}
+
+	static std::shared_ptr<Consumable> generateConsumable();
 };
 

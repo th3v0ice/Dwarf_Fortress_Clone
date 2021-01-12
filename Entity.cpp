@@ -8,16 +8,16 @@ Entity::Entity()
     weapon = nullptr;
     attack = 10;
     defense = 0;
-    inventory.setLimit(2);
+    inventory.setLimit(3);
 }
 
-int Entity::reduceHealth(int amount)
+bool Entity::reduceHealth(int amount)
 {
     health -= amount;
     if (health <= 0)
-        return 1;
+        return false;
 
-    return 0;
+    return true;
 }
 
 int Entity::equipOrConsume(std::shared_ptr<Item> i)
