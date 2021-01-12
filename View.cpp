@@ -101,6 +101,8 @@ int View::initiateFight(std::shared_ptr<Monster> m) {
         m_att = m->getAttack(),
         m_def = m->getDefense();
 
+    nodelay(stdscr, FALSE);
+
     while (alive_p && alive_m) {
         
         float dmg = p_att * ( p_att / (p_att + m_def));
@@ -121,8 +123,14 @@ int View::initiateFight(std::shared_ptr<Monster> m) {
         drawMap();
 
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(300));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     }
+
+    printMessage(center_x - 12, height - 2, "Press any key to continue");
+    drawMap();
+
+    getch();
+    nodelay(stdscr, TRUE);
 
     return (alive_p) ? 0 : 1;
 }
@@ -141,6 +149,8 @@ int View::checkFieldAndPerfAction(){
 
                 return -1;
             } else {
+                //std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+
                 shrdMap->updateMap(x_cord, y_cord, 'x');
                 //We need to drop the items that monster had
                 int x = x_cord,
@@ -157,8 +167,9 @@ int View::checkFieldAndPerfAction(){
 
                 y++;
                 for(int i = 0; i < c; i++)
-                    shrdMap->updateMap(x - i, y, 'C');                
+                    shrdMap->updateMap(x - i, y, 'H');    
 
+                shrdMap->getMapAroundPlayer(x_cord, y_cord, width, height, buffer);
             }
 
             break;

@@ -9,6 +9,9 @@
 #include "Weapon.h"
 #include "Monster.h"
 
+#include <curses.h>
+
+
 typedef typename std::vector<std::vector<char>> BUFFER;
 
 
