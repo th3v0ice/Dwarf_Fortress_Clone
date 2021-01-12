@@ -108,6 +108,9 @@ int main()
     while(1)
     {
         code = inputHandler();
-        view->gameLogic(code);
+        if(view->gameLogic(code) < 0)
+            break;
     }
+
+    
 }

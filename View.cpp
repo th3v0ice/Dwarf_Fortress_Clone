@@ -136,6 +136,10 @@ int View::checkFieldAndPerfAction(){
             if(initiateFight(monster)) {
                 //Player has died
                 printMessage(center_x, center_y, "You have DIED!");
+                drawMap();
+                std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+
+                return -1;
             } else {
                 shrdMap->updateMap(x_cord, y_cord, 'x');
                 //We need to drop the items that monster had
@@ -242,7 +246,8 @@ int View::gameLogic(gcode &code) {
                     y_cord = 0;
 
                 shrdMap->getMapAroundPlayer(x_cord, y_cord, width, height, buffer);
-                checkFieldAndPerfAction();
+                if(checkFieldAndPerfAction() < 0)
+                    return -1;
 
                 buffer[center_y][center_x] = 'P';
                 prev_y = y_cord;
@@ -261,7 +266,8 @@ int View::gameLogic(gcode &code) {
                     y_cord = limit_y;
 
                 shrdMap->getMapAroundPlayer(x_cord, y_cord, width, height, buffer);
-                checkFieldAndPerfAction();
+                if(checkFieldAndPerfAction() < 0)
+                    return -1;
 
                 buffer[center_y][center_x] = 'P';
                 prev_y = y_cord;
@@ -277,7 +283,9 @@ int View::gameLogic(gcode &code) {
                     x_cord = 0;
 
                 shrdMap->getMapAroundPlayer(x_cord, y_cord, width, height, buffer);
-                checkFieldAndPerfAction();
+                if(checkFieldAndPerfAction() < 0)
+                    return -1;
+
                 buffer[center_y][center_x] = 'P';
                 prev_x = x_cord;
             }
@@ -292,7 +300,9 @@ int View::gameLogic(gcode &code) {
                     x_cord = limit_x;
 
                 shrdMap->getMapAroundPlayer(x_cord, y_cord, width, height, buffer);
-                checkFieldAndPerfAction();
+                if(checkFieldAndPerfAction() < 0)
+                    return -1;
+
                 buffer[center_y][center_x] = 'P';
                 prev_x = x_cord;
             }
