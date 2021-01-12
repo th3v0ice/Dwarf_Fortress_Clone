@@ -55,6 +55,8 @@ private:
 
     void printMessage(int x, int y, std::string s);
 
+    void drawFightScreen(std::shared_ptr<Monster> monster, int& p_hp_x_coord, int& m_hp_x_coord, int& hp_y_coord);
+
 public:
     View(int w, int h, 
         std::shared_ptr<Map> m, 

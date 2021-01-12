@@ -1,6 +1,9 @@
 #pragma once
 #include <sstream>
 #include "Entity.h"
+
+
+
 class Player : public Entity
 {
 public:
@@ -31,5 +34,6 @@ public:
 
     int addToInventory(std::shared_ptr<Item> item);
 
+    static std::vector<std::string> shape;
 };
 

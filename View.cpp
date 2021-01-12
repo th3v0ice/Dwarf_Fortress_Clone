@@ -8,6 +8,70 @@ enum fields
     WEAPON = 'W'
 };
 
+void View::drawFightScreen(std::shared_ptr<Monster> monster, int& p_hp_x_coord, int& m_hp_x_coord, int& hp_y_coord) {
+    //Draw border and fill with blanks
+	for (int i = 0; i < height; i++) {
+		buffer[i][0] = '|';
+        buffer[i][width - 1] = '|';
+        for(int j = 1; j < width - 1; j++)
+            buffer[i][j] = ' ';
+	}
+    //Draw border
+	for (int j = 0; j < width; j++) {
+		buffer[0][j] = '=';
+        buffer[height - 1][j] = '=';
+	}
+
+    int 
+        spacing = 2,
+        h_start = 2,
+        left_width_start = width - 30;
+
+    //Draw player shape and stats
+    for(int i = 0; i < Player::shape.size() && h_start < height-1; i++, h_start++) {
+        printMessage(spacing, h_start, Player::shape[i]);
+    }
+    
+    if(h_start + 4 >= height) {
+        spacing = 30;
+        h_start = 2;
+    }
+
+    printMessage(spacing, h_start++, "========================");
+    printMessage(spacing, h_start++,   "Attack  " + std::to_string(shrdPlayer->getAttack()));
+    printMessage(spacing, h_start++, "Defense " + std::to_string(shrdPlayer->getDefense()));
+
+    p_hp_x_coord = spacing;
+    hp_y_coord = h_start;
+    printMessage(spacing, h_start++, "Health  " + std::to_string(shrdPlayer->getHealth()));
+
+    creature_t shape = monster->getShape();
+
+    h_start = 2;
+
+    //Draw monster shape and stats
+    for(int i = 0; i < shape.size() && h_start < height - 1; i++) {
+        printMessage(left_width_start, h_start, shape[i]);
+        h_start++;
+    }
+
+    if(h_start + 4 >= height) {
+        left_width_start -= 30;
+        h_start = 2;
+    }
+    
+    printMessage(left_width_start, h_start++, "========================");
+    printMessage(left_width_start, h_start++, "Attack  " + std::to_string(monster->getAttack()));
+    printMessage(left_width_start, h_start++, "Defense " + std::to_string(monster->getDefense()));
+
+    m_hp_x_coord = left_width_start;
+    printMessage(left_width_start, h_start++, "Health  " + std::to_string(monster->getHealth()));
+    
+
+    drawMap();
+
+    return;
+}
 
 void View::printMessage(int x, int y, std::string s) {
     for(int i = 0; i < s.length() && i < buffer[y].size(); i++)
@@ -23,20 +87,41 @@ int View::initiateFight(std::shared_ptr<Monster> m) {
     bool 
         alive_p = true,
         alive_m = true;
+    
+    int 
+        p_hp_x = 0,
+        hp_y = 0,
+        m_hp_x = 0;
+
+    drawFightScreen(m, p_hp_x, m_hp_x, hp_y);
+
+    float 
+        p_att = shrdPlayer->getAttack(),
+        p_def = shrdPlayer->getDefense(),
+        m_att = m->getAttack(),
+        m_def = m->getDefense();
 
     while (alive_p && alive_m) {
-        int dmg = shrdPlayer->getAttack() - m->getDefense();
-        if(dmg < 0) dmg = 1;
+        
+        float dmg = p_att * ( p_att / (p_att + m_def));
+        if(dmg <= 0) dmg = 1;
         
         alive_m = m->reduceHealth(dmg);
 
+        printMessage(m_hp_x, hp_y, "Health  " + std::to_string(m->getHealth()) + "  ");
+        drawMap();
         if(!alive_m)
             break;
 
-        dmg = m->getAttack() - shrdPlayer->getDefense();
-        if(dmg < 0) dmg = 1;
+        dmg = m_att * ( m_att / ( m_att + p_def));
+        if(dmg <= 0) dmg = 1;
         
         alive_p = shrdPlayer->reduceHealth(dmg);
+        printMessage(p_hp_x, hp_y, "Health  " + std::to_string(shrdPlayer->getHealth()) + "  ");
+        drawMap();
+
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(300));
     }
 
     return (alive_p) ? 0 : 1;
@@ -242,10 +327,7 @@ int View::init() {
 
 int View::drawMap()
 {
-	//int height = buffer.size();
-	//int width = buffer[0].size();
-
-	int bsize = (width + 0) * height;
+    int bsize = (width + 0) * height;
 	char buf[bsize];
 	int start = 0;
 

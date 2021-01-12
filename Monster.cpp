@@ -1,5 +1,47 @@
 #include "Monster.h"
 
+/**
+ * All ASCII Art was downloaded from
+ *  
+ * https://www.asciiart.eu/mythology
+ * 
+*/
+creature_t Monster::centaur =  {
+"  <=======]}======",
+"    --.   /|",
+"   _\"/_.'/",
+" .'._._,.'",
+" :/ \\{}/",
+"(L  /--',----._",
+"    |          \\\\",
+"   : /-\\ .'-'\\ / |",
+"    \\\\, ||    \\|",
+"     \\/ ||    ||"
+};
+
+creature_t Monster::ghost = {
+"       .-.",
+"      ( \" )",
+"   /\\_.' '._/\\",
+"   |         |",
+"    \\       /",
+"     \\    /`",
+"   (__)  /",
+"   `.__.'"
+};
+
+creature_t Monster::gryphon = {
+"    .-')",
+"   (`_^ (    .----`/",
+"    ` )  \\_/`   __/     __,",
+"    __{   |`  __/      /_/",
+"   / _{    \\__/ '--.  //",
+"   \\_> \\_\\  >__/    \\((",
+"        _/ /` _\\_   |))",
+"       /__(  /______/`"
+};
+
+std::vector<creature_t> Monster::creatures = {centaur, ghost, gryphon};
 
 void Monster::fillInventoryWithRandomItems() {
     unsigned seed = time(0);

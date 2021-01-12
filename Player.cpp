@@ -1,5 +1,20 @@
 #include "Player.h"
 
+std::vector<std::string> Player::shape = {
+"   \\\\\\|||///",
+" .  =======",
+"/ \\| O   O |",
+"\\ / \\`___'/ ",
+" #   _| |_",
+"(#) (     )",  
+" #\\//|* *|\\\\ ",
+" #\\/(  *  )/",   
+" #   =====",  
+" #   ( U )", 
+" #   || ||",
+".#---'| |`----.",
+"`#----' `-----'"
+};
 
 void Player::useSelectedItemFromInventory() {
     std::shared_ptr<Item> item = inventory.getSelectedItem();
