@@ -1,12 +1,6 @@
 #include "View.h"
 
-enum fields
-{
-    MONSTER = 'M',
-    POTION = 'H',
-    ARMOR = 'A',
-    WEAPON = 'W'
-};
+
 
 void View::drawFightScreen(std::shared_ptr<Monster> monster, int& p_hp_x_coord, int& m_hp_x_coord, int& hp_y_coord) {
     //Draw border and fill with blanks
@@ -136,8 +130,8 @@ int View::initiateFight(std::shared_ptr<Monster> m) {
 }
 
 int View::checkFieldAndPerfAction(){
-    char c = buffer[center_y][center_x];
-    switch(c)
+    data_t c = buffer[center_y][center_x];
+    switch(hash(c))
     {
         case MONSTER: {
             std::shared_ptr<Monster> monster = Monster::generateMonster();
@@ -169,7 +163,7 @@ int View::checkFieldAndPerfAction(){
                 for(int i = 0; i < c; i++)
                     shrdMap->updateMap(x - i, y, 'H');    
 
-                shrdMap->getMapAroundPlayer(x_cord, y_cord, width, height, buffer);
+                shrdMap->getMapAroundPlayer(x_cord, y_cord, center_x, center_y, buffer);
             }
 
             break;
@@ -208,12 +202,12 @@ int View::gameLogic(gcode &code) {
             if(!inv_open) {
                 inv_open = true;
                 stats_open = false;
-                shrdMap->getMapAroundPlayer(x_cord, y_cord, width, height, buffer);
+                shrdMap->getMapAroundPlayer(x_cord, y_cord, center_x, center_y, buffer);
                 shrdPlayer->drawInventory(buffer);
             } else {
                 //Closing the inventory
                 inv_open = false;
-                shrdMap->getMapAroundPlayer(x_cord, y_cord, width, height, buffer);
+                shrdMap->getMapAroundPlayer(x_cord, y_cord, center_x, center_y, buffer);
                 buffer[center_y][center_x] = 'P';
             }
             break;
@@ -236,11 +230,11 @@ int View::gameLogic(gcode &code) {
             if(!stats_open) {
                 stats_open = true;
                 inv_open = false;
-                shrdMap->getMapAroundPlayer(x_cord, y_cord, width, height, buffer);
+                shrdMap->getMapAroundPlayer(x_cord, y_cord, center_x, center_y, buffer);
                 shrdPlayer->drawCharacterStats(buffer);
             } else {
                 stats_open = false;
-                shrdMap->getMapAroundPlayer(x_cord, y_cord, width, height, buffer);
+                shrdMap->getMapAroundPlayer(x_cord, y_cord, center_x, center_y, buffer);
                 buffer[center_y][center_x] = 'P';
             }
             break;
@@ -253,10 +247,10 @@ int View::gameLogic(gcode &code) {
                 y_cord = prev_y;
             } else {
                 y_cord--;
-                if (y_cord < 0)
-                    y_cord = 0;
+                if (y_cord < BORDER)
+                    y_cord = BORDER;
 
-                shrdMap->getMapAroundPlayer(x_cord, y_cord, width, height, buffer);
+                shrdMap->getMapAroundPlayer(x_cord, y_cord, center_x, center_y, buffer);
                 if(checkFieldAndPerfAction() < 0)
                     return -1;
 
@@ -276,7 +270,7 @@ int View::gameLogic(gcode &code) {
                 if(y_cord > limit_y)
                     y_cord = limit_y;
 
-                shrdMap->getMapAroundPlayer(x_cord, y_cord, width, height, buffer);
+                shrdMap->getMapAroundPlayer(x_cord, y_cord, center_x, center_y, buffer);
                 if(checkFieldAndPerfAction() < 0)
                     return -1;
 
@@ -290,10 +284,10 @@ int View::gameLogic(gcode &code) {
                 x_cord = prev_x;
             } else {
                 x_cord--;
-                if(x_cord < 0)
-                    x_cord = 0;
+                if(x_cord < BORDER)
+                    x_cord = BORDER;
 
-                shrdMap->getMapAroundPlayer(x_cord, y_cord, width, height, buffer);
+                shrdMap->getMapAroundPlayer(x_cord, y_cord, center_x, center_y, buffer);
                 if(checkFieldAndPerfAction() < 0)
                     return -1;
 
@@ -310,7 +304,7 @@ int View::gameLogic(gcode &code) {
                 if(x_cord > limit_x)
                     x_cord = limit_x;
 
-                shrdMap->getMapAroundPlayer(x_cord, y_cord, width, height, buffer);
+                shrdMap->getMapAroundPlayer(x_cord, y_cord, center_x, center_y, buffer);
                 if(checkFieldAndPerfAction() < 0)
                     return -1;
 
@@ -330,7 +324,7 @@ int View::gameLogic(gcode &code) {
 
 int View::init() {
     buffer.reserve(height);
-    std::vector<char> dd(width);
+    VSBUFF dd(width);
 
     for(int i = 0; i < height; i++)
         buffer.push_back(dd);
@@ -339,34 +333,25 @@ int View::init() {
         for(int j = 0; j < width; j++)
             buffer[i][j] = '-';
 
-    //shrdMap->getMapAroundPlayer(x_cord, y_cord, width, height, buffer);
-
     drawMap(); 
 
     return 0;
 }
 
 int View::drawMap()
-{
-    int bsize = (width + 0) * height;
-	char buf[bsize];
-	int start = 0;
-
+{	
+	std::wstring buf;
+	
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
-			char c = buffer[i][j];
-			if(c == 'X')
-				bsize++;
-			start += sprintf(buf + start, "%c", c);
+			data_t c = buffer[i][j];
+			buf.append(c);
 		}
-		//start += sprintf(buf + start, "\n");
 	}
 
-	//start += sprintf(buf + start, "\n");
-	
     CLEAR;
     GOTOXY(0, 0);
-	printf("%s", buf);
+    std::wcout << buf;
 	fflush(stdout);
 	return 0;
 }

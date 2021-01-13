@@ -4,6 +4,7 @@
 #include "Weapon.h"
 #include "Armor.h"
 #include "Consumable.h"
+#include "Map.h"
 
 #pragma once
 class Inventory
@@ -13,11 +14,11 @@ public:
     Inventory()     : selected_item_idx(0), limit(3) { inventory.reserve(3);     }
     Inventory(int l): selected_item_idx(0), limit(l) { inventory.reserve(limit); }
 
-    void drawInventory(std::vector<std::vector<char>> &buffer);
+    void drawInventory(BUFFER &buffer);
     void dropFromInventory();
     int addToInventory(std::shared_ptr<Item> item);
 
-    void changeInventorySelection(int p, std::vector<std::vector<char>> &buffer);
+    void changeInventorySelection(int p, BUFFER &buffer);
     void setLimit(int lim) { limit = lim; }
     int getLimit() { return limit; }
     std::shared_ptr<Item> getSelectedItem();

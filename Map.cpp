@@ -41,44 +41,39 @@ int Map::loadMap(std::string fileName)
 	}
 
 	//Resize the map to accomodate the data and fill the map with blanks
-	map.resize((height + FULL_BORDER) * (width + FULL_BORDER), ' ');
+	map.resize((height + FULL_BORDER) * (width + FULL_BORDER), L" ");
 
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+	std::wstring wide = converter.from_bytes(data);
+	
 	//Position the data correctly inside the map
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
 			int map_index = (i + BORDER) * (width + FULL_BORDER) + (j + BORDER);
 			int data_index = i * width + j;
 
-			map[map_index] = data[data_index];
+			map[map_index] = wide[data_index];
 		}
-	}
+	} 
 
 	return 0;
 }
 
-int Map::getMapAroundPlayer(int x, int y, int bufw, int bufh, std::vector<std::vector<char>>& buffer)
+int Map::getMapAroundPlayer(int x, int y, int center_x, int center_y, BUFFER& buffer)
 {
-	int
-		center_x = bufw / 2,
-		center_y = bufh / 2;
-
 	//The current position of the player on the screen is (center_x, center_y)
 	//The current position of the player on the map is (x, y)
-	int
-		offset_x = x + BORDER,
-		offset_y = y + BORDER;
 
+	int 
+		map_start_x = x - center_x,
+		map_start_y = y - center_y,
+		bufh = buffer.size(),
+		bufw = buffer[0].size();
 
-	buffer.clear();
-
-	int map_start_x = offset_x - center_x;
-	int map_start_y = offset_y - center_y;
-
-	for (int i = 0; i < bufh; i++) {
-		buffer.push_back(std::vector<char>());
+	for (int i = 0; i < buffer.size(); i++) {
 		for (int j = 0; j < bufw; j++) {
 			int map_index = (map_start_y + i) * (width + FULL_BORDER) + map_start_x;
-			buffer[i].push_back(map[map_index + j]);
+			buffer[i][j] = map[map_index + j];
 		}
 	}
 	
@@ -170,38 +165,32 @@ int Map::test_load_good_file()
 	return 0;
 }
 
-int Map::draw_map(std::vector<std::vector<char>> &buffer)
+int Map::draw_map(BUFFER &buffer)
 {
 	int height = buffer.size();
 	int width = buffer[0].size();
-
-	int bsize = (width + 0) * height;
-	char buf[bsize];
-	int start = 0;
-
+	std::wstring buf;
+	
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
-			char c = buffer[i][j];
-			if(c == 'X')
-				bsize++;
-			start += sprintf(buf + start, "%c", c);
+			data_t c = buffer[i][j];
+			buf.append(c);
 		}
-		//start += sprintf(buf + start, "\n");
 	}
-
-	//start += sprintf(buf + start, "\n");
 
     CLEAR;
     GOTOXY(0, 0);
-	printf("%s", buf);
+    std::wcout << buf;
 	fflush(stdout);
+    
 	return 0;
 }
 
 int Map::test_get_map()
 {
 	std::chrono::seconds tm(1);
-	std::vector<std::vector<char>> buffer;
+	BUFFER buffer;
+
 
 
 	getMapAroundPlayer(92, 15, 185, 30, buffer);
@@ -233,5 +222,3 @@ int Map::test_get_map()
 
 	return 0;
 }
-
-

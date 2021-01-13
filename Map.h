@@ -1,14 +1,20 @@
 #pragma once
-#include<iostream>
-#include<vector>
-#include<string>
+#include <iostream>
+#include <vector>
+#include <string>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
+
+#include <locale>
+#include <codecvt>
+
 #include <stdio.h>
 
 //Needed for testing.
 #include <chrono>
 #include <thread>
+
+#include <sstream>
 
 enum {
 	HEIGHT_ERROR = -1,
@@ -27,6 +33,10 @@ enum {
 #define CLEAR printf("\033[H\033[J")
 #define GOTOXY(x,y) printf("\033[%d;%dH", (y), (x))
 
+typedef std::wstring data_t;
+typedef std::vector<data_t> VSBUFF;
+typedef std::vector<VSBUFF> BUFFER;
+
 class Map
 {
 private:
@@ -40,7 +50,7 @@ private:
 	* This will enable very fast retrieving of the "view" player
 	* is looking at.
 	*/
-	std::vector<char> map;
+	VSBUFF map;
 
 public:
 	Map(int w, int h) {
@@ -76,14 +86,14 @@ public:
 	* is always centered on the screen. If the player is near a maps bounds 
 	* then buffer will be populated with blank's or "space" characters. 
 	* 
-	* x      ->    is the players X coordinate on the map, not on the screen
-	* y      ->    is the players Y coordinate on the map, not on the screen
-	* bufw   ->	   is the width of the console window
-	* bufh   ->	   is the height of the console window
-	* buffer ->    is a reference to the vector matrix in which we should
-	*              put the screen data
+	* x        ->    is the players X coordinate on the map, not on the screen
+	* y        ->    is the players Y coordinate on the map, not on the screen
+	* center_x ->	 is the center x of the console window
+	* center_y ->	 is the center y of the console window
+	* buffer   ->    is a reference to the vector matrix in which we should
+	*                put the screen data
 	*/
-	int getMapAroundPlayer(int x, int y, int bufw, int bufh, std::vector<std::vector<char>>& buffer);
+	int getMapAroundPlayer(int x, int y, int bufw, int bufh, BUFFER& buffer);
 
 	/**
 	 * Updates the map at the designated coordinates. 
@@ -96,7 +106,10 @@ public:
 
 	//Testing code
 	int self_check();
-	int draw_map(std::vector<std::vector<char>>& buffer);
+	int draw_map(BUFFER& buffer);
+
+	int getWidth() { return width; }
+	int getHeight() { return height; }
 
 private:
 	//UNIT TESTS BELOW
@@ -109,6 +122,5 @@ private:
 	int test_load_good_file();
 
 	int test_get_map();
-
 };
 

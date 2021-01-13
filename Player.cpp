@@ -29,7 +29,7 @@ void Player::useSelectedItemFromInventory() {
     return;
 }
 
-void Player::drawCharacterStats(std::vector<std::vector<char>> &buffer) {
+void Player::drawCharacterStats(BUFFER &buffer) {
 
        int 
         height = buffer.size(),

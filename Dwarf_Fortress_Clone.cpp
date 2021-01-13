@@ -86,9 +86,12 @@ int main()
     nodelay(stdscr, TRUE);
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);     //Lets get terminal window size
 
-
-
-
+    //Character encoding is not properly set unless we print something.
+    setlocale(LC_ALL, "en_US.UTF-8");
+    wchar_t* wt = new wchar_t[1];
+    wt = L"‾";
+    std::wcout << wt << std::endl;
+    //delete[] wt;
 
     player = std::shared_ptr<Player>(new Player(), [](Player* plyr){ if(plyr) delete plyr;});
     player->testFillInventory();

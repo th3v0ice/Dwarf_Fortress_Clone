@@ -1,7 +1,7 @@
 #pragma once
 #include <sstream>
 #include "Entity.h"
-
+#include "Map.h"
 
 
 class Player : public Entity
@@ -16,11 +16,11 @@ public:
         inventory.setLimit(5);
     }
 
-	void drawInventory(std::vector<std::vector<char>> &buffer){
+	void drawInventory(BUFFER &buffer){
 		inventory.drawInventory(buffer);
 	}
 
-    void changeInventorySelection(std::vector<std::vector<char>> &buffer, int p){
+    void changeInventorySelection(BUFFER &buffer, int p){
         inventory.changeInventorySelection(p, buffer);
         return;
     }
@@ -30,7 +30,7 @@ public:
     }
 
     void useSelectedItemFromInventory();
-    void drawCharacterStats(std::vector<std::vector<char>> &buffer);
+    void drawCharacterStats(BUFFER &buffer);
 
     int addToInventory(std::shared_ptr<Item> item);
 

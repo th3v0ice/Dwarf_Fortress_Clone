@@ -11,9 +11,14 @@
 
 #include <curses.h>
 
-
-typedef typename std::vector<std::vector<char>> BUFFER;
-
+enum fields
+{
+    MONSTER,
+    POTION,
+    ARMOR,
+    WEAPON,
+    NONE
+};
 
 enum class gcode
 {
@@ -47,7 +52,7 @@ private:
         inv_open,
         stats_open;
 
-    std::vector<std::vector<char>> buffer;
+    BUFFER buffer;
 
     std::shared_ptr<Player> shrdPlayer;
     std::shared_ptr<Map> shrdMap;
@@ -60,19 +65,28 @@ private:
 
     void drawFightScreen(std::shared_ptr<Monster> monster, int& p_hp_x_coord, int& m_hp_x_coord, int& hp_y_coord);
 
+    fields hash(data_t in) {
+        if(in == L"M") return MONSTER;
+        if(in == L"W") return WEAPON;
+        if(in == L"A") return ARMOR;
+        if(in == L"H") return POTION;
+
+        return NONE;
+    }
+
 public:
     View(int w, int h, 
         std::shared_ptr<Map> m, 
         std::shared_ptr<Player> p): width(w), height(h), shrdMap(m), shrdPlayer(p) 
     {    
-        x_cord = width / 2;
-        y_cord = height / 2;
+        x_cord = BORDER + m->getWidth() / 2;
+        y_cord = BORDER + m->getHeight() / 2;
         prev_x = x_cord;
         prev_y = y_cord;
-        center_x = x_cord;
-        center_y = y_cord;
-        limit_x = width - 1;
-        limit_y = height - 1;
+        center_x = width / 2;
+        center_y = height / 2;
+        limit_x = BORDER + m->getWidth() - 1;
+        limit_y = BORDER + m->getHeight() - 1;
 
         inv_open = false;
         stats_open = false;

@@ -1,6 +1,6 @@
 #include "Inventory.h"
 
-void Inventory::drawInventory(std::vector<std::vector<char>> &buffer)
+void Inventory::drawInventory(BUFFER &buffer)
 {
     int 
         height = buffer.size(),
@@ -82,7 +82,7 @@ void Inventory::dropFromInventory()
         inventory.erase(inventory.begin() + selected_item_idx);
 }
 
-void Inventory::changeInventorySelection(int p, std::vector<std::vector<char>> &buffer)
+void Inventory::changeInventorySelection(int p, BUFFER &buffer)
 {
     buffer[selected_item_idx_y][selected_item_idx_x] = ' ';
 
