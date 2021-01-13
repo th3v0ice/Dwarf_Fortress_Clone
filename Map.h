@@ -7,6 +7,8 @@
 
 #include <locale>
 #include <codecvt>
+#include <curses.h>
+
 
 #include <stdio.h>
 

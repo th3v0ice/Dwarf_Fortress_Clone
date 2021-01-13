@@ -98,5 +98,5 @@ set(ROOT_NAMESPACE DwarfFortressClone)
 ################################################################################
 
 target_compile_options(${PROJECT_NAME} PRIVATE -std=c++17 -O0 -g)
-target_link_libraries(${PROJECT_NAME} PRIVATE -lncurses)
+target_link_libraries(${PROJECT_NAME} PRIVATE -lncursesw)
 

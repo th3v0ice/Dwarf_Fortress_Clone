@@ -349,9 +349,10 @@ int View::drawMap()
 		}
 	}
 
-    CLEAR;
-    GOTOXY(0, 0);
-    std::wcout << buf;
-	fflush(stdout);
+	erase();
+	move(0,0);
+	addwstr(buf.c_str());
+	refresh();
+    
 	return 0;
 }
