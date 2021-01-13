@@ -191,6 +191,13 @@ int View::checkFieldAndPerfAction(){
                 shrdMap->updateMap(x_cord, y_cord, L" "); //If Item was consumed we need to update the main map here.         
             break;
         }
+        case WALL: {
+            y_cord = prev_y;
+            x_cord = prev_x;
+            shrdMap->getMapAroundPlayer(x_cord, y_cord, center_x, center_y, buffer);
+
+            break;
+        }
     }
     return 0;
 }
@@ -331,9 +338,31 @@ int View::init() {
 
     for(int i = 0; i < height; i++)
         for(int j = 0; j < width; j++)
-            buffer[i][j] = '-';
+            buffer[i][j] = ' ';
 
-    drawMap(); 
+    std::string buf = "Use WASD or Arrow Keys to move around the map.";
+    std::string buf2 = "M represents a Monster and will initiate a fight";
+    std::string buf3 = "W is a Weapon pickup";
+    std::string buf4 = "A is a Armor pickup";
+    std::string buf5 = "H is a Health potion";
+    std::string buf6 = "Use I to open the inventory";
+    std::string buf7 = "Use C to display player stats";
+    std::string buf8 = "Use a move key to start the game!";
+
+    erase();
+	move(2, 10); addstr(buf.c_str());
+    move(3, 10); addstr(buf2.c_str());
+    move(4, 10); addstr(buf3.c_str());
+    move(5, 10); addstr(buf4.c_str());
+    move(6, 10); addstr(buf5.c_str());
+    move(7, 10); addstr(buf6.c_str());
+    move(8, 10); addstr(buf7.c_str());
+    move(9, 10); addstr(buf8.c_str());
+	refresh();
+
+    //drawMap(); 
+    shrdMap->getMapAroundPlayer(x_cord, y_cord, center_x, center_y, buffer);
+
 
     return 0;
 }

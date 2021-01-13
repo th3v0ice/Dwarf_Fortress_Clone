@@ -83,7 +83,6 @@ int main()
     noecho();
     clear();
     keypad(stdscr, true);
-    nodelay(stdscr, TRUE);
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);     //Lets get terminal window size
 
     //Character encoding is not properly set unless we print something.
@@ -94,7 +93,7 @@ int main()
     //delete[] wt;
 
     player = std::shared_ptr<Player>(new Player(), [](Player* plyr){ if(plyr) delete plyr;});
-    player->testFillInventory();
+    //player->testFillInventory();
 
     shrdMap = std::make_shared<Map>();
 
@@ -107,6 +106,10 @@ int main()
 
     view = std::shared_ptr<View>(new View(w.ws_col, w.ws_row, shrdMap, player));
     view->init();
+    
+    getch();
+    nodelay(stdscr, TRUE);
+
 
     while(1)
     {

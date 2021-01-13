@@ -17,6 +17,7 @@ enum fields
     POTION,
     ARMOR,
     WEAPON,
+    WALL,
     NONE
 };
 
@@ -70,7 +71,7 @@ private:
         if(in == L"W") return WEAPON;
         if(in == L"A") return ARMOR;
         if(in == L"H") return POTION;
-
+        if(in == L"~") return WALL;
         return NONE;
     }
 
