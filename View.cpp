@@ -145,7 +145,7 @@ int View::checkFieldAndPerfAction(){
             } else {
                 //std::this_thread::sleep_for(std::chrono::milliseconds(3000));
 
-                shrdMap->updateMap(x_cord, y_cord, 'x');
+                shrdMap->updateMap(x_cord, y_cord, L".");
                 //We need to drop the items that monster had
                 int x = x_cord,
                     y = y_cord, 
@@ -153,15 +153,15 @@ int View::checkFieldAndPerfAction(){
 
                 monster->itemsInInventory(w, a, c);
                 for(int i = 0; i < w; i++)
-                    shrdMap->updateMap(x - i, y, 'W');
+                    shrdMap->updateMap(x - i, y, L"W");
                 
                 y++;
                 for(int i = 0; i < a; i++)
-                    shrdMap->updateMap(x - i, y, 'A');
+                    shrdMap->updateMap(x - i, y, L"A");
 
                 y++;
                 for(int i = 0; i < c; i++)
-                    shrdMap->updateMap(x - i, y, 'H');    
+                    shrdMap->updateMap(x - i, y, L"H");    
 
                 shrdMap->getMapAroundPlayer(x_cord, y_cord, center_x, center_y, buffer);
             }
@@ -172,7 +172,7 @@ int View::checkFieldAndPerfAction(){
             std::shared_ptr<Consumable> cons = Consumable::generateConsumable();
             
             if( shrdPlayer->addToInventory(std::static_pointer_cast<Item>(cons)) >= 0)
-                shrdMap->updateMap(x_cord, y_cord, '_'); //If Item was consumed we need to update the main map here.
+                shrdMap->updateMap(x_cord, y_cord, L" "); //If Item was consumed we need to update the main map here.
 
             break;
         }
@@ -180,7 +180,7 @@ int View::checkFieldAndPerfAction(){
             std::shared_ptr<Armor> armor = Armor::generateArmor();
 
             if( shrdPlayer->addToInventory(std::static_pointer_cast<Item>(armor)) >= 0)
-                shrdMap->updateMap(x_cord, y_cord, '_'); //If Item was consumed we need to update the main map here.
+                shrdMap->updateMap(x_cord, y_cord, L" "); //If Item was consumed we need to update the main map here.
 
             break;
         }
@@ -188,7 +188,7 @@ int View::checkFieldAndPerfAction(){
             std::shared_ptr<Weapon> weapon = Weapon::generateWeapon();
 
             if( shrdPlayer->addToInventory(std::static_pointer_cast<Item>(weapon)) >= 0)
-                shrdMap->updateMap(x_cord, y_cord, '_'); //If Item was consumed we need to update the main map here.         
+                shrdMap->updateMap(x_cord, y_cord, L" "); //If Item was consumed we need to update the main map here.         
             break;
         }
     }

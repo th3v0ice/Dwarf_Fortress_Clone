@@ -104,7 +104,7 @@ public:
 	 * y      ->    is the players Y coordinate on the map, not on the screen
 	 * c      ->    character to place at coordinates
 	*/
-	int updateMap(int x, int y, char c);
+	int updateMap(int x, int y, data_t c);
 
 	//Testing code
 	int self_check();

@@ -80,12 +80,12 @@ int Map::getMapAroundPlayer(int x, int y, int center_x, int center_y, BUFFER& bu
 	return 0;
 }
 
-int Map::updateMap(int x, int y, char c) {
+int Map::updateMap(int x, int y, data_t c) {
 
 	//The current position of the player on the map is (x, y)
 	int
-		offset_x = x + BORDER,
-		offset_y = y + BORDER;
+		offset_x = x,
+		offset_y = y;
 
 	int map_index = offset_y * (width + FULL_BORDER) + offset_x;
 	map[map_index] = c;
@@ -182,7 +182,7 @@ int Map::draw_map(BUFFER &buffer)
 	move(0,0);
 	addwstr(buf.c_str());
 	refresh();
-	
+
 	return 0;
 }
 

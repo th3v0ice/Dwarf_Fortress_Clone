@@ -98,7 +98,7 @@ int main()
 
     shrdMap = std::make_shared<Map>();
 
-	int ret = shrdMap->loadMap("tests/mape.json");
+	int ret = shrdMap->loadMap("tests/map.json");
     if(ret < 0)
     {
         std::cout << "Failed while loading the Map file" << std::endl;
